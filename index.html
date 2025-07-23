@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Weather App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 50px;
+    }
+    input, button {
+      padding: 10px;
+      margin: 10px;
+      font-size: 16px;
+    }
+    #result {
+      margin-top: 20px;
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🌤️ Current Weather App</h1>
+  
+  <input type="text" id="city" placeholder="Enter city name" />
+  <button onclick="getWeather()">Get Weather</button>
+
+  <div id="result"></div>
+
+  <script>
+    async function getWeather() {
+      const city = document.getElementById("city").value.trim();
+      if (!city) {
+        alert("Please enter a city name.");
+        return;
+      }
+
+      const url = `https://ordkfvra1b.execute-api.ap-south-1.amazonaws.com/Weather?city=${encodeURIComponent(city)}`;
+
+      try {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error("API error");
+
+        const data = await response.json();
+        document.getElementById("result").innerHTML = `
+          <strong>Temperature:</strong> ${data.temperature}°C<br>
+          <strong>Humidity:</strong> ${data.humidity}%<br>
+          <strong>Condition:</strong> ${data.description}
+        `;
+      } catch (error) {
+        console.error(error);
+        document.getElementById("result").innerText = "⚠️ Failed to fetch weather data.";
+      }
+    }
+  </script>
+
+</body>
+</html>
